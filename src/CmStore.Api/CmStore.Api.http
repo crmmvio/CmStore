@@ -1,0 +1,6 @@
+@CmStore.Api_HostAddress = http://localhost:5064
+
+GET {{CmStore.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
