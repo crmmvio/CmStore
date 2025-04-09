@@ -13,8 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\CmStore.Data\CmStore.Data.csproj" />
-		<ProjectReference Include="..\CmStore.Domain\CmStore.Domain.csproj" />
+	  <ProjectReference Include="..\CmStore.Ioc\CmStore.Ioc.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

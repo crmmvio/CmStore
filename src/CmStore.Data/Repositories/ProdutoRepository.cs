@@ -24,7 +24,7 @@ namespace CmStore.Data.Repositories
                                                 .Include(f => f.Vendedor)
                                                 .Include(f => f.Categoria);
 
-            return await queryResult.OrderBy(p => p.Nome).ToListAsync();
+            return await queryResult.OrderBy(p => p.Descricao).ToListAsync();
         }
 
         public async Task<Produto> ObterProdutoVendedor(Guid id, bool tracking)

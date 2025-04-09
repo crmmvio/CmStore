@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CmStore.Data.EntityConfiguration
+namespace CmStore.Data.Configuration
 {
     public class CategoriaConfig : IEntityTypeConfiguration<Categoria>
     {
