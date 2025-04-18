@@ -9,57 +9,56 @@ namespace CmStore.Api.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class ProdutosController : ControllerBase
+    public class CategoriaController : ControllerBase
     {
-
         private readonly AppDbContext _context;
 
-        public ProdutosController(AppDbContext context)
+        public CategoriaController(AppDbContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<Produto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<Categoria>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetAll()
         {
-            if (_context.Produtos == null)
+            if (_context.Categorias == null)
             {
-                return NotFound();
+                return Problem("Erro ao criar um produto, contate o suporte!");
             }
 
-            var produtos = await _context.Produtos.ToListAsync();
-            return Ok(produtos);
+            var categorias = await _context.Categorias.ToListAsync();
+            return Ok(categorias);
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(IEnumerable<Produto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<Categoria>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<Produto>> GetById(int id)
+        public async Task<ActionResult<Categoria>> GetById(int id)
         {
-            if (_context.Produtos == null)
+            if (_context.Categorias == null)
             {
-                return NotFound();
+                return Problem("Erro ao criar um produto, contate o suporte!");
             }
 
-            var produto = await _context.Produtos.FindAsync(id);
-            if (produto == null)
+            var categoria = await _context.Categorias.FindAsync(id);
+            if (categoria == null)
             {
                 return NotFound();
             }
-            return Ok(produto);
+            return Ok(categoria);
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(Produto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(Categoria), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<Produto>> Create([FromBody] Produto produto)
+        public async Task<ActionResult<Categoria>> Create([FromBody] Categoria categoria)
         {
-            if (_context.Produtos == null)
+            if (_context.Categorias == null)
             {
                 return Problem("Erro ao criar um produto, contate o suporte!");
             }
@@ -72,27 +71,25 @@ namespace CmStore.Api.Controllers
                 });
             }
 
-            _context.Produtos.Add(produto);
+            _context.Categorias.Add(categoria);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = produto.Id }, produto);
+
+            return CreatedAtAction(nameof(GetById), new { id = categoria.Id }, categoria);
         }
 
         [HttpPut("{id:int}")]
-        [ProducesResponseType(typeof(Produto), StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<Produto>> Update(int id, [FromBody] Produto produto)
+        public async Task<ActionResult<Categoria>> Update(int id, [FromBody] Categoria categoria)
         {
-            if (_context.Produtos == null)
+            if (_context.Categorias == null)
             {
-                return Problem("Erro ao atualizar um produto, contate o suporte!");
+                return Problem("Erro ao criar um produto, contate o suporte!");
             }
 
-            if (id != produto.Id) return BadRequest();
+            if (id != categoria.Id) return BadRequest();
 
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
-            _context.Entry(produto).State = EntityState.Modified;
+            _context.Entry(categoria).State = EntityState.Modified;
 
             try
             {
@@ -100,7 +97,7 @@ namespace CmStore.Api.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                if (!ProdutoExists(id))
+                if (!CategoriaExists(id))
                 {
                     return NotFound();
                 }
@@ -113,32 +110,32 @@ namespace CmStore.Api.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(Categoria), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> Delete(int id)
         {
-            if (_context.Produtos == null)
+            if (_context.Categorias == null)
             {
                 return Problem("Erro ao criar um produto, contate o suporte!");
             }
 
-            var produto = await _context.Produtos.FindAsync(id);
-            if (produto == null)
+            var categoria = await _context.Categorias.FindAsync(id);
+            if (categoria == null)
             {
                 return NotFound();
             }
 
-            _context.Produtos.Remove(produto);
+            _context.Categorias.Remove(categoria);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ProdutoExists(int id)
+        private bool CategoriaExists(int id)
         {
-            return (_context.Produtos?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Categorias?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
