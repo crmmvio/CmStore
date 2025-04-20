@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CmStore.Core.Models;
+﻿namespace CmStore.Core.Models;
 
 public class Vendedor
 {
+    public string Id { get; set; }
+
+    public string Nome { get; set; }
+
+    public string Email { get; set; }
+
+    public bool Ativo { get; set; }
+
+    public virtual IEnumerable<Produto> Produtos { get; set; }
 }

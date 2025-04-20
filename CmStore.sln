@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmStore.Api", "src\CmStore.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmStore.Core", "src\CmStore.Core\CmStore.Core.csproj", "{03EE7184-98E2-4857-82C0-6036BC8F8CD3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmStore.Ui", "src\CmStore.Ui\CmStore.Ui.csproj", "{A04F9E8C-B2AF-4E90-A6F5-543B96EEFE00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{03EE7184-98E2-4857-82C0-6036BC8F8CD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03EE7184-98E2-4857-82C0-6036BC8F8CD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03EE7184-98E2-4857-82C0-6036BC8F8CD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A04F9E8C-B2AF-4E90-A6F5-543B96EEFE00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A04F9E8C-B2AF-4E90-A6F5-543B96EEFE00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A04F9E8C-B2AF-4E90-A6F5-543B96EEFE00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A04F9E8C-B2AF-4E90-A6F5-543B96EEFE00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

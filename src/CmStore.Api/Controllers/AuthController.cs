@@ -1,4 +1,5 @@
-﻿using CmStore.Core.Models;
+﻿using CmStore.Core.Data;
+using CmStore.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -15,14 +16,17 @@ namespace CmStore.Api.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly AppDbContext _context;
         private readonly JwtSettings _jwtSettings;
 
         public AuthController(SignInManager<IdentityUser> signInManager,
                               UserManager<IdentityUser> userManager,
+                              AppDbContext context,
                               IOptions<JwtSettings> jwtSettings)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _context = context;
             _jwtSettings = jwtSettings.Value;
         }
 
@@ -45,8 +49,19 @@ namespace CmStore.Api.Controllers
 
             if (result.Succeeded)
             {
+                var vender = new Vendedor
+                {
+                    Id = user.Id,
+                    Nome = user.UserName,
+                    Email = user.Email,
+                    Ativo = true
+                };
+
+                _context.Vendedores.Add(vender);
+                await _context.SaveChangesAsync();
+
                 await _signInManager.SignInAsync(user, false);
-                return Ok(GerarJwt(registerUser.Email));
+                return Ok(await GerarJwt(registerUser.Email));
             }
 
             return ValidationProblem("Falha ao registrar o usuário");
@@ -64,7 +79,7 @@ namespace CmStore.Api.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(GerarJwt(loginUser.Email));
+                return Ok(await GerarJwt(loginUser.Email));
             }
 
             return Problem("Usuário ou senha incorretos");
@@ -77,7 +92,7 @@ namespace CmStore.Api.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.Id)
             };
 
             //Adicionando as roles do usuário como Claims
@@ -91,6 +106,7 @@ namespace CmStore.Api.Controllers
 
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
+                Subject = new ClaimsIdentity(claims),
                 Issuer = _jwtSettings.Emissor,
                 Audience = _jwtSettings.Audiencia,
                 Expires = DateTime.UtcNow.AddHours(_jwtSettings.ExpiracaoHoras),

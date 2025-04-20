@@ -63,6 +63,8 @@ namespace CmStore.Api.Controllers
                 return Problem("Erro ao criar um produto, contate o suporte!");
             }
 
+            ModelState.Remove("Produtos");
+
             if (!ModelState.IsValid)
             {
                 return ValidationProblem(new ValidationProblemDetails(ModelState)
@@ -86,6 +88,8 @@ namespace CmStore.Api.Controllers
             }
 
             if (id != categoria.Id) return BadRequest();
+
+            ModelState.Remove("Produtos");
 
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 

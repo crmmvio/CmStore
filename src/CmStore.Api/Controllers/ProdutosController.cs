@@ -1,8 +1,10 @@
 ﻿using CmStore.Core.Data;
 using CmStore.Core.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CmStore.Api.Controllers
 {
@@ -11,14 +13,22 @@ namespace CmStore.Api.Controllers
     [Route("api/[controller]")]
     public class ProdutosController : ControllerBase
     {
-
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly AppDbContext _context;
 
-        public ProdutosController(AppDbContext context)
+        public ProdutosController(SignInManager<IdentityUser> signInManager,
+                                  UserManager<IdentityUser> userManager,
+                                  AppDbContext context)
         {
+            _signInManager = signInManager;
+            _userManager = userManager;
             _context = context;
         }
 
+        private async Task<IdentityUser> GetCurrentUserAsync() => await _userManager.FindByIdAsync(User.Identity.Name);
+
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Produto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -29,8 +39,11 @@ namespace CmStore.Api.Controllers
             {
                 return NotFound();
             }
-
-            var produtos = await _context.Produtos.ToListAsync();
+            
+            var produtos = await _context.Produtos.AsNoTracking()
+                                                  //.Include(e=> e.Vendedor)
+                                                  //.Include(e=> e.Categoria)
+                                                  .ToListAsync();
             return Ok(produtos);
         }
 
@@ -45,11 +58,14 @@ namespace CmStore.Api.Controllers
                 return NotFound();
             }
 
-            var produto = await _context.Produtos.FindAsync(id);
+            var user = await GetCurrentUserAsync();
+
+            var produto = await _context.Produtos.FirstOrDefaultAsync(e=> e.Id == id && e.VendedorId == user.Id);
             if (produto == null)
             {
                 return NotFound();
             }
+
             return Ok(produto);
         }
 
@@ -59,10 +75,17 @@ namespace CmStore.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<Produto>> Create([FromBody] Produto produto)
         {
-            if (_context.Produtos == null)
+            if (_context.Produtos == null || produto == null)
             {
                 return Problem("Erro ao criar um produto, contate o suporte!");
             }
+
+            var user = await GetCurrentUserAsync();
+            produto.VendedorId = user.Id;
+
+            ModelState.Remove("Categoria");
+            ModelState.Remove("Vendedor");
+            ModelState.Remove("VendedorId");
 
             if (!ModelState.IsValid)
             {
@@ -71,7 +94,7 @@ namespace CmStore.Api.Controllers
                     Title = "Um ou mais erros de validação ocorreram!"
                 });
             }
-
+            
             _context.Produtos.Add(produto);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = produto.Id }, produto);
@@ -88,7 +111,9 @@ namespace CmStore.Api.Controllers
                 return Problem("Erro ao atualizar um produto, contate o suporte!");
             }
 
-            if (id != produto.Id) return BadRequest();
+            var user = await GetCurrentUserAsync();
+
+            if (id != produto.Id || produto.VendedorId != user.Id) return BadRequest();
 
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
@@ -124,7 +149,8 @@ namespace CmStore.Api.Controllers
                 return Problem("Erro ao criar um produto, contate o suporte!");
             }
 
-            var produto = await _context.Produtos.FindAsync(id);
+            var user = await GetCurrentUserAsync();
+            var produto = await _context.Produtos.FirstOrDefaultAsync(e=> e.Id == id && e.VendedorId == user.Id);
             if (produto == null)
             {
                 return NotFound();

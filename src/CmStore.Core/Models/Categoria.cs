@@ -15,5 +15,5 @@ public class Categoria
 
     public bool Ativo { get; set; } = true;
 
-    //public IEnumerable<Produto> Produtos { get; set; }
+    public virtual IEnumerable<Produto> Produtos { get; set; }
 }
