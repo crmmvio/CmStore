@@ -40,7 +40,6 @@ namespace CmStore.Api.Controllers
 
             var user = new IdentityUser
             {
-                UserName = registerUser.Email,
                 Email = registerUser.Email,
                 EmailConfirmed = true
             };
@@ -49,15 +48,15 @@ namespace CmStore.Api.Controllers
 
             if (result.Succeeded)
             {
-                var vender = new Vendedor
+                var vendedor = new Vendedor
                 {
                     Id = user.Id,
-                    Nome = user.UserName,
+                    Nome = registerUser.Name,
                     Email = user.Email,
                     Ativo = true
                 };
 
-                _context.Vendedores.Add(vender);
+                _context.Vendedores.Add(vendedor);
                 await _context.SaveChangesAsync();
 
                 await _signInManager.SignInAsync(user, false);
