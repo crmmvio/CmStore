@@ -24,7 +24,7 @@ namespace CmStore.Ui.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            return user; 
+            return user;
         }
 
         public async Task<IActionResult> Index()
@@ -33,9 +33,9 @@ namespace CmStore.Ui.Controllers
             var appDbContext = _context.Produtos
                                        .Include(p => p.Categoria)
                                        .Include(p => p.Vendedor)
-                                       .Where(e=> e.VendedorId == user.Id);
-
-            return View(await appDbContext.ToListAsync());
+                                       .Where(e => e.VendedorId == user.Id);
+            var result = await appDbContext.ToListAsync();
+            return View(result);
         }
 
         [HttpGet()]
@@ -66,7 +66,7 @@ namespace CmStore.Ui.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Descricao,Imagem,Preco,QuantidadeEstoque,CategoriaId,Ativo")] Produto produto)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Descricao,ImagemUpload,Preco,QuantidadeEstoque,CategoriaId,Ativo")] Produto produto)
         {
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nome");
             var vendedor = await GetUsuarioLogado();
@@ -85,6 +85,16 @@ namespace CmStore.Ui.Controllers
 
             if (ModelState.IsValid)
             {
+                var imgPrefixo = Guid.NewGuid().ToString() + "_";
+                if (produto.ImagemUpload != null)
+                {
+                    var resultado = await UploadArquivo(produto.ImagemUpload, imgPrefixo);
+                    if (resultado)
+                    {
+                        produto.Imagem = imgPrefixo + produto.ImagemUpload.FileName;
+                    }
+                }
+
                 _context.Add(produto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -110,7 +120,7 @@ namespace CmStore.Ui.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao,Imagem,Preco,QuantidadeEstoque,VendedorId,CategoriaId,Ativo")] Produto produto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao,ImagemUpload,Preco,QuantidadeEstoque,VendedorId,CategoriaId,Ativo")] Produto produto)
         {
             if (id != produto.Id)
             {
@@ -124,6 +134,19 @@ namespace CmStore.Ui.Controllers
 
             if (ModelState.IsValid)
             {
+                var produtoDb = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == produto.Id);
+                produto.Imagem = produtoDb != null ? produtoDb.Imagem : string.Empty;
+
+                if (produto.ImagemUpload != null)
+                {
+                    var imgPrefixo = Guid.NewGuid().ToString() + "_";
+                    var resultado = await UploadArquivo(produto.ImagemUpload, imgPrefixo);
+                    if (resultado)
+                    {
+                        produto.Imagem = imgPrefixo + produto.ImagemUpload.FileName;
+                    }
+                }
+
                 try
                 {
                     _context.Update(produto);
@@ -182,6 +205,30 @@ namespace CmStore.Ui.Controllers
         private bool ProdutoExists(int id)
         {
             return _context.Produtos.Any(e => e.Id == id);
+        }
+
+        private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)
+        {
+            var dirImages = "wwwroot/imagens";
+            if (arquivo.Length <= 0) return false;
+
+            if (!Directory.Exists(dirImages))
+                Directory.CreateDirectory(dirImages);
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), dirImages, imgPrefixo + arquivo.FileName);
+
+            if (System.IO.File.Exists(path))
+            {
+                ModelState.AddModelError("", "Já existe um arquivo com esse nome");
+                return false;
+            }
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await arquivo.CopyToAsync(stream);
+            }
+
+            return true;
         }
     }
 }

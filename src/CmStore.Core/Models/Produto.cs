@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CmStore.Core.Models;
 
@@ -14,8 +16,13 @@ public class Produto
     [Display(Name = "Descrição")]
     public string Descricao { get; set; } = string.Empty;
 
+    [Display(Name = "Imagem do Produto")]
     public string Imagem { get; set; } = string.Empty;
 
+    [NotMapped]
+    public IFormFile? ImagemUpload { get; set; } 
+
+    //[Moeda]
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [Range(1, int.MaxValue, ErrorMessage = "O preço deve ser maior que zero")]
     [Display(Name = "Preço")]

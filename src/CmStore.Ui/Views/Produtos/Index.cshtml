@@ -13,9 +13,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th></th>
             <th>@Html.DisplayNameFor(model => model.Nome)</th>
             <th>@Html.DisplayNameFor(model => model.Descricao)</th>
-            <th>@Html.DisplayNameFor(model => model.Imagem)</th>
             <th>@Html.DisplayNameFor(model => model.Preco)</th>
             <th>@Html.DisplayNameFor(model => model.QuantidadeEstoque)</th>
             <th>@Html.DisplayNameFor(model => model.Categoria)</th>
@@ -27,9 +27,9 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td><img src="/imagens/@item.Imagem" style="height: 100px; width: 61px" /></td>
                 <td>@Html.DisplayFor(modelItem => item.Nome)</td>
                 <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
-                <td>@Html.DisplayFor(modelItem => item.Imagem)</td>
                 <td>@Html.DisplayFor(modelItem => item.Preco)</td>
                 <td>@Html.DisplayFor(modelItem => item.QuantidadeEstoque)</td>
                 <td>@Html.DisplayFor(modelItem => item.Categoria.Nome)</td>

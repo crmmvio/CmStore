@@ -1,6 +1,8 @@
 using CmStore.Core.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,14 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+var supportCulture = new[] { "pt-BR" };
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(supportCulture[0]),
+    SupportedCultures = supportCulture.Select(c => new CultureInfo(c)).ToList(),
+    SupportedUICultures = supportCulture.Select(c => new CultureInfo(c)).ToList()
+});
 
 app.UseAuthorization();
 
