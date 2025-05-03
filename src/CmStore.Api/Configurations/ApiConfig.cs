@@ -1,4 +1,6 @@
-﻿namespace CmStore.Api.Configurations
+﻿using System.Text.Json.Serialization;
+
+namespace CmStore.Api.Configurations
 {
     public static class ApiConfig
     {
@@ -8,6 +10,10 @@
                             .ConfigureApiBehaviorOptions(options =>
                             {
                                 options.SuppressModelStateInvalidFilter = true;
+                            })
+                            .AddJsonOptions(options =>
+                            {
+                                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
                             });
 
             return builder;

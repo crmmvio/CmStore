@@ -20,25 +20,24 @@ public class Produto
     public string Imagem { get; set; } = string.Empty;
 
     [NotMapped]
+    [Display(Name = "Imagem do Produto")]
     public IFormFile? ImagemUpload { get; set; } 
 
-    //[Moeda]
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [Range(1, int.MaxValue, ErrorMessage = "O preço deve ser maior que zero")]
     [Display(Name = "Preço")]
     public decimal Preco { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Range(0, int.MaxValue, ErrorMessage = "A quantidade deve ser maior ou igual a zero")]
     [Display(Name = "Qtde Estoque")]
     public int QuantidadeEstoque { get; set; }
 
     public bool Ativo { get; set; }
 
-    //[Required(ErrorMessage = "O campo {0} é obrigatório")]
     public string VendedorId { get; set; }
     public virtual Vendedor Vendedor { get; set; }
 
-    //[Required(ErrorMessage = "O campo {0} é obrigatório")]
     [Display(Name = "Categoria")]
     public int CategoriaId { get; set; }
 

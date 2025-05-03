@@ -30,6 +30,11 @@ namespace CmStore.Api.Controllers
             _jwtSettings = jwtSettings.Value;
         }
 
+        /// <summary>
+        /// Registra novo Usuario
+        /// </summary>
+        /// <param name="registerUser">Informe os dados do Usuario</param>
+        /// <returns></returns>
         [HttpPost("registrar")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -66,6 +71,11 @@ namespace CmStore.Api.Controllers
             return ValidationProblem("Falha ao registrar o usuário");
         }
 
+        /// <summary>
+        /// Realiza login de usuario cadastrados
+        /// </summary>
+        /// <param name="loginUser">Informe os dados do usuario para login</param>
+        /// <returns></returns>
         [HttpPost("login")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]

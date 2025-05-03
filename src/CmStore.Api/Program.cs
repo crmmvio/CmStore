@@ -2,6 +2,7 @@ using CmStore.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddDatabaseSelector();
 builder.AddApiConfig()
        .AddCorsConfig()
        .AddSwaggerConfig()
@@ -19,6 +20,8 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.UseCors("Production");
 }
 
@@ -28,5 +31,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseDbMigrationHelper();
 
 app.Run();
