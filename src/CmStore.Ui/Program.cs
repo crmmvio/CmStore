@@ -1,22 +1,16 @@
 using CmStore.Core.Data;
+using CmStore.Ui.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<AppDbContext>(options => 
-{
-    options.UseLazyLoadingProxies();
-    options.UseSqlServer(connectionString);
-});
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.AddDatabaseSelector();
+builder.Services.AddDatabaseDeveloperPageExceptionFilter()
+                .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -45,11 +39,14 @@ app.UseRequestLocalization(new RequestLocalizationOptions
     SupportedUICultures = supportCulture.Select(c => new CultureInfo(c)).ToList()
 });
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+app.UseDbMigrationHelper();
 
 app.Run();

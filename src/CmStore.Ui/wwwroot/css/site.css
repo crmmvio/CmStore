@@ -37,3 +37,9 @@ body {
     background-color: #dde0e3;
     cursor: pointer;
 }
+
+.card-image {
+    height: 250px;
+    width: 170px;
+    margin: 10px;
+}

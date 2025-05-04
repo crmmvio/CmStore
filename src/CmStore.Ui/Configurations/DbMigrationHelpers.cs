@@ -42,19 +42,19 @@ public class DbMigrationHelpers
             return;
 
         await context.Categorias.AddRangeAsync(new List<Categoria>()
-    {
-        new Categoria {Id = 1,Codigo = "Lv001", Nome = "Conhecimentos Gerais", Ativo = true },
-        new Categoria {Id = 2,Codigo = "Lv002", Nome = "Informatica", Ativo = true },
-        new Categoria {Id = 3,Codigo = "Lv003", Nome = "Economia", Ativo = true }
-    });
+        {
+            new Categoria {Id = 1, Codigo = "Lv001", Nome = "Conhecimentos Gerais", Ativo = true },
+            new Categoria {Id = 2, Codigo = "Lv002", Nome = "Informatica", Ativo = true },
+            new Categoria {Id = 3, Codigo = "Lv003", Nome = "Economia", Ativo = true }
+        });
 
         await context.SaveChangesAsync();
 
-        var idVendedor = Guid.NewGuid().ToString();
+        var vendedorId = Guid.NewGuid().ToString();
 
         await context.Users.AddAsync(new IdentityUser
         {
-            Id = idVendedor,
+            Id = vendedorId,
             UserName = "teste@crm.com",
             NormalizedUserName = "TESTE@CRM.COM",
             Email = "teste@crm.com",
@@ -71,103 +71,114 @@ public class DbMigrationHelpers
 
         await context.Vendedores.AddAsync(new Vendedor
         {
-            Id = idVendedor,
+            Id = vendedorId,
             Nome = "Cleber Movio",
             Email = "teste@crm.com",
             Ativo = true
         });
 
+        //var roleId = Guid.NewGuid().ToString();
+        //await context.Roles.AddAsync(new IdentityRole()
+        //{
+        //    Id = roleId,
+        //    Name = "Admin",
+        //    NormalizedName = "ADMIN",
+        //    ConcurrencyStamp =  Guid.NewGuid().ToString()
+        //});
+
+        //await context.UserRoles.AddAsync(new IdentityUserRole<string>() { UserId = vendedorId, RoleId = roleId });
+
         await context.Produtos.AddRangeAsync(new List<Produto>
-    {
-        new Produto
         {
-            Id = 1,
-            Nome = "Pai Rico, Pai Pobre",
-            Descricao = "Econômia e Investimento",
-            Preco = 100,
-            Categoria = context.Categorias.Single(c => c.Codigo == "Lv003"),
-            VendedorId = idVendedor,
-            Imagem = string.Empty,
-            Ativo = true
-        },
-        new Produto
-        {
-            Id = 2,
-            Nome = "O Homem mais Rico da Babilônia",
-            Descricao = "Econômia e Investimento",
-            Preco = 100,
-            Categoria = context.Categorias.Single(c => c.Codigo == "Lv003"),
-            VendedorId = idVendedor,
-            Imagem = string.Empty,
-            Ativo = true
-        },
-        new Produto
-        {
-            Id = 3,
-            Nome = "O Investidor Inteligente",
-            Descricao = "Econômia e Investimento",
-            Preco = 100,
-            Categoria = context.Categorias.Single(c => c.Codigo == "Lv003"),
-            VendedorId = idVendedor,
-            Imagem = string.Empty,
-            Ativo = true
-        },
-        new Produto
-        {
-            Id = 4,
-            Nome = "Fundamentos Html5 e CSS3",
-            Descricao = "Desenvolvimento Web",
-            Preco = 89,
-            Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-            VendedorId = idVendedor,
-            Imagem = string.Empty,
-            Ativo = true
-        },
-        new Produto
-        {
-            Id = 5,
-            Nome = "Fundamentos de Java",
-            Descricao = "Desenvolvimento Web",
-            Preco = 89,
-            Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-            VendedorId = idVendedor,
-            Imagem = string.Empty,
-            Ativo = true
-        },
-        new Produto
-        {
-            Id = 6,
-            Nome = "Fundamentos de C#",
-            Descricao = "Desenvolvimento Web",
-            Preco = 89,
-            Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-            VendedorId = idVendedor,
-            Imagem = string.Empty,
-            Ativo = true
-        },
-        new Produto
-        {
-            Id = 7,
-            Nome = "Fundamentos de C++",
-            Descricao = "Desenvolvimento Web",
-            Preco = 89,
-            Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-            VendedorId = idVendedor,
-            Imagem = string.Empty,
-            Ativo = true
-        },
-        new Produto
-        {
-            Id = 8,
-            Nome = "Fundamentos de Python",
-            Descricao = "Desenvolvimento Web",
-            Preco = 89,
-            Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-            VendedorId = idVendedor,
-            Imagem = string.Empty,
-            Ativo = true
-        },
-    });
+            new Produto
+            {
+                Id = 1,
+                Nome = "Pai Rico, Pai Pobre",
+                Descricao = "Econômia e Investimento",
+                Preco = 100,
+                Categoria = context.Categorias.Single(c => c.Codigo == "Lv003"),
+                VendedorId = vendedorId,
+                Imagem = string.Empty,
+                Ativo = true
+            },
+            new Produto
+            {
+                Id = 2,
+                Nome = "O Homem mais Rico da Babilônia",
+                Descricao = "Econômia e Investimento",
+                Preco = 100,
+                Categoria = context.Categorias.Single(c => c.Codigo == "Lv003"),
+                VendedorId = vendedorId,
+                Imagem = string.Empty,
+                Ativo = true
+            },
+            new Produto
+            {
+                Id = 3,
+                Nome = "O Investidor Inteligente",
+                Descricao = "Econômia e Investimento",
+                Preco = 100,
+                Categoria = context.Categorias.Single(c => c.Codigo == "Lv003"),
+                VendedorId = vendedorId,
+                Imagem = string.Empty,
+                Ativo = true
+            },
+            new Produto
+            {
+                Id = 4,
+                Nome = "Fundamentos Html5 e CSS3",
+                Descricao = "Desenvolvimento Web",
+                Preco = 89,
+                Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
+                VendedorId = vendedorId,
+                Imagem = string.Empty,
+                Ativo = true
+            },
+            new Produto
+            {
+                Id = 5,
+                Nome = "Fundamentos de Java",
+                Descricao = "Desenvolvimento Web",
+                Preco = 89,
+                Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
+                VendedorId = vendedorId,
+                Imagem = string.Empty,
+                Ativo = true
+            },
+            new Produto
+            {
+                Id = 6,
+                Nome = "Fundamentos de C#",
+                Descricao = "Desenvolvimento Web",
+                Preco = 89,
+                Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
+                VendedorId = vendedorId,
+                Imagem = string.Empty,
+                Ativo = true
+            },
+            new Produto
+            {
+                Id = 7,
+                Nome = "Fundamentos de C++",
+                Descricao = "Desenvolvimento Web",
+                Preco = 89,
+                Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
+                VendedorId = vendedorId,
+                Imagem = string.Empty,
+                Ativo = true
+            },
+            new Produto
+            {
+                Id = 8,
+                Nome = "Fundamentos de Python",
+                Descricao = "Desenvolvimento Web",
+                Preco = 89,
+                Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
+                VendedorId = vendedorId,
+                Imagem = string.Empty,
+                Ativo = true
+            },
+        });
 
         await context.SaveChangesAsync();
     }

@@ -30,11 +30,13 @@ namespace CmStore.Ui.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await GetUsuarioLogado();
-            var appDbContext = _context.Produtos
-                                       .Include(p => p.Categoria)
-                                       .Include(p => p.Vendedor)
-                                       .Where(e => e.VendedorId == user.Id);
-            var result = await appDbContext.ToListAsync();
+            var dataQuery = _context.Produtos
+                                    .Include(p => p.Categoria)
+                                    .Include(p => p.Vendedor)
+                                    .Where(e => e.VendedorId == user.Id);
+
+            var result = await dataQuery.ToListAsync();
+
             return View(result);
         }
 

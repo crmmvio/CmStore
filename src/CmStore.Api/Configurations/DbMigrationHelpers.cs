@@ -41,20 +41,20 @@ public class DbMigrationHelpers
         if (context.Produtos.Any())
             return;
 
-        await context.Categorias.AddRangeAsync(new List<Categoria>() 
+        await context.Categorias.AddRangeAsync(new List<Categoria>()
         {
-            new Categoria {Id = 1,Codigo = "Lv001", Nome = "Conhecimentos Gerais", Ativo = true },
-            new Categoria {Id = 2,Codigo = "Lv002", Nome = "Informatica", Ativo = true },
-            new Categoria {Id = 3,Codigo = "Lv003", Nome = "Economia", Ativo = true }
+            new Categoria {Id = 1, Codigo = "Lv001", Nome = "Conhecimentos Gerais", Ativo = true },
+            new Categoria {Id = 2, Codigo = "Lv002", Nome = "Informatica", Ativo = true },
+            new Categoria {Id = 3, Codigo = "Lv003", Nome = "Economia", Ativo = true }
         });
 
         await context.SaveChangesAsync();
 
-        var idVendedor = Guid.NewGuid().ToString();
+        var vendedorId = Guid.NewGuid().ToString();
 
         await context.Users.AddAsync(new IdentityUser
         {
-            Id = idVendedor,
+            Id = vendedorId,
             UserName = "teste@crm.com",
             NormalizedUserName = "TESTE@CRM.COM",
             Email = "teste@crm.com",
@@ -71,11 +71,22 @@ public class DbMigrationHelpers
 
         await context.Vendedores.AddAsync(new Vendedor
         {
-            Id = idVendedor,
+            Id = vendedorId,
             Nome = "Cleber Movio",
             Email = "teste@crm.com",
             Ativo = true
         });
+
+        //var roleId = Guid.NewGuid().ToString();
+        //await context.Roles.AddAsync(new IdentityRole()
+        //{
+        //    Id = roleId,
+        //    Name = "Admin",
+        //    NormalizedName = "ADMIN",
+        //    ConcurrencyStamp =  Guid.NewGuid().ToString()
+        //});
+
+        //await context.UserRoles.AddAsync(new IdentityUserRole<string>() { UserId = vendedorId, RoleId = roleId });
 
         await context.Produtos.AddRangeAsync(new List<Produto>
         {
@@ -86,7 +97,7 @@ public class DbMigrationHelpers
                 Descricao = "Econômia e Investimento",
                 Preco = 100,
                 Categoria = context.Categorias.Single(c => c.Codigo == "Lv003"),
-                VendedorId = idVendedor,
+                VendedorId = vendedorId,
                 Imagem = string.Empty,
                 Ativo = true
             },
@@ -97,7 +108,7 @@ public class DbMigrationHelpers
                 Descricao = "Econômia e Investimento",
                 Preco = 100,
                 Categoria = context.Categorias.Single(c => c.Codigo == "Lv003"),
-                VendedorId = idVendedor,
+                VendedorId = vendedorId,
                 Imagem = string.Empty,
                 Ativo = true
             },
@@ -108,7 +119,7 @@ public class DbMigrationHelpers
                 Descricao = "Econômia e Investimento",
                 Preco = 100,
                 Categoria = context.Categorias.Single(c => c.Codigo == "Lv003"),
-                VendedorId = idVendedor,
+                VendedorId = vendedorId,
                 Imagem = string.Empty,
                 Ativo = true
             },
@@ -119,7 +130,7 @@ public class DbMigrationHelpers
                 Descricao = "Desenvolvimento Web",
                 Preco = 89,
                 Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-                VendedorId = idVendedor,
+                VendedorId = vendedorId,
                 Imagem = string.Empty,
                 Ativo = true
             },
@@ -130,7 +141,7 @@ public class DbMigrationHelpers
                 Descricao = "Desenvolvimento Web",
                 Preco = 89,
                 Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-                VendedorId = idVendedor,
+                VendedorId = vendedorId,
                 Imagem = string.Empty,
                 Ativo = true
             },
@@ -141,7 +152,7 @@ public class DbMigrationHelpers
                 Descricao = "Desenvolvimento Web",
                 Preco = 89,
                 Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-                VendedorId = idVendedor,
+                VendedorId = vendedorId,
                 Imagem = string.Empty,
                 Ativo = true
             },
@@ -152,7 +163,7 @@ public class DbMigrationHelpers
                 Descricao = "Desenvolvimento Web",
                 Preco = 89,
                 Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-                VendedorId = idVendedor,
+                VendedorId = vendedorId,
                 Imagem = string.Empty,
                 Ativo = true
             },
@@ -163,7 +174,7 @@ public class DbMigrationHelpers
                 Descricao = "Desenvolvimento Web",
                 Preco = 89,
                 Categoria = context.Categorias.Single(c => c.Codigo == "Lv002"),
-                VendedorId = idVendedor,
+                VendedorId = vendedorId,
                 Imagem = string.Empty,
                 Ativo = true
             },

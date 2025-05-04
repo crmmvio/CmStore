@@ -1,8 +1,27 @@
-﻿@{
+﻿@model IEnumerable<CmStore.Core.Models.Produto>
+
+@{
     ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div class="row row-cols-1 row-cols-md-4 g-5">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card">
+                <div class="text-center">
+                    <img src="@Html.GetUrlImageProduto(item)" class="card-img-top card-image" alt="@item.Imagem" />
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nome</h5>
+                    <p class="card-text">
+                        @item.Preco.ToString("C")
+                    </p>
+                    @* <button type="button" class="btn btn-primary" asp-controller="Produtos" asp-action="Details" asp-route-id="@item.Id">Detalhes</button> *@
+                </div>                
+            </div>
+        </div>
+    }
+
 </div>
