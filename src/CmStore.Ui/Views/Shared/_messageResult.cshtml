@@ -1,0 +1,32 @@
+﻿@if (TempData["Success"] != null)
+{
+    var mensagem = TempData["Success"];
+
+    <div style="padding-top: 15px"></div>
+
+    <div id="msg_box" class="alert alert-success">
+        <h4 id="msgRetorno">@Html.Raw(mensagem)</h4>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    var mensagem = TempData["Error"];
+
+    <div style="padding-top: 15px"></div>
+
+    <div id="msg_box" class="alert alert-danger">
+        <h4 id="msgRetorno">@Html.Raw(mensagem)</h4>
+    </div>
+}
+
+@if (TempData["Warning"] != null)
+{
+    var mensagem = TempData["Warning"];
+
+    <div style="padding-top: 15px"></div>
+
+    <div id="msg_box" class="alert alert-warning">
+        <h4 id="msgRetorno">@Html.Raw(mensagem)</h4>
+    </div>
+}

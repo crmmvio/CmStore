@@ -1,14 +1,18 @@
 ﻿using CmStore.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Reflection.Emit;
 
 namespace CmStore.Core.Data;
 
 public class AppDbContext : IdentityDbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public bool UsingSqlLite { get; private set; }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options)
     {
+        UsingSqlLite = !string.IsNullOrWhiteSpace(configuration.GetConnectionString("DefaultConnectionLite"));
     }
 
     public DbSet<Produto> Produtos { get; set; }

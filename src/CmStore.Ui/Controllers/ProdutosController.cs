@@ -31,6 +31,7 @@ namespace CmStore.Ui.Controllers
         {
             var user = await GetUsuarioLogado();
             var dataQuery = _context.Produtos
+                                    .AsNoTracking()
                                     .Include(p => p.Categoria)
                                     .Include(p => p.Vendedor)
                                     .Where(e => e.VendedorId == user.Id);
@@ -61,7 +62,7 @@ namespace CmStore.Ui.Controllers
         public IActionResult Create()
         {
             var produto = new Produto() { Ativo = true };
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nome");
+            ViewData["CategoriaId"] = new SelectList(_context.Categorias.Where(e=> e.Ativo), "Id", "Nome");
 
             return View(produto);
         }
@@ -97,8 +98,13 @@ namespace CmStore.Ui.Controllers
                     }
                 }
 
+                if (_context.UsingSqlLite)
+                    produto.Id = _context.Produtos.Max(e => e.Id) + 1;
+
                 _context.Add(produto);
                 await _context.SaveChangesAsync();
+                TempData.Add("Success", "Produto cadastrado com sucesso!");
+
                 return RedirectToAction(nameof(Index));
             }
             return View(produto);
@@ -153,16 +159,18 @@ namespace CmStore.Ui.Controllers
                 {
                     _context.Update(produto);
                     await _context.SaveChangesAsync();
+
+                    TempData.Add("Error", "Produto atualizado com sucesso!");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ProdutoExists(produto.Id))
                     {
-                        return NotFound();
+                        TempData.Add("Error", "Produto não encontrado");
                     }
                     else
                     {
-                        throw;
+                        TempData.Add("Error", "Ocorreu um erro inesperado ao tentar editar o produto.");
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -201,6 +209,8 @@ namespace CmStore.Ui.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData.Add("Success", "Produto excluído com sucesso!");
+
             return RedirectToAction(nameof(Index));
         }
 

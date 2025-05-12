@@ -20,6 +20,7 @@ namespace CmStore.Ui.Controllers
         public async Task<IActionResult> Index()
         {
             var dataQuery = _context.Produtos
+                                    .AsNoTracking()
                                     .Include(p => p.Categoria)
                                     .Include(p => p.Vendedor);
 

@@ -51,8 +51,13 @@ namespace CmStore.Ui.Controllers
 
             if (ModelState.IsValid)
             {
+                if(_context.UsingSqlLite)
+                    categoria.Id = _context.Categorias.Max(e => e.Id) + 1;
+
                 _context.Add(categoria);
                 await _context.SaveChangesAsync();
+
+                TempData.Add("Success", "Categoria cadastrada com sucesso!");
                 return RedirectToAction(nameof(Index));
             }
             return View(categoria);
@@ -89,16 +94,19 @@ namespace CmStore.Ui.Controllers
                 {
                     _context.Update(categoria);
                     await _context.SaveChangesAsync();
+
+                    TempData.Add("Success", "Categoria alterada com sucesso!");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
+
                     if (!CategoriaExists(categoria.Id))
                     {
-                        return NotFound();
+                        TempData.Add("Error", "Categoria não encotrada");
                     }
                     else
                     {
-                        throw;
+                        TempData.Add("Error", "Ocorreu um erro inesperado");
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -113,11 +121,20 @@ namespace CmStore.Ui.Controllers
                 return NotFound();
             }
 
-            var categoria = await _context.Categorias.FirstOrDefaultAsync(m => m.Id == id);
+            var categoria = await _context.Categorias
+                                          .AsNoTracking()
+                                          .Include(e=> e.Produtos)
+                                          .FirstOrDefaultAsync(m => m.Id == id);
 
             if (categoria == null)
             {
                 return NotFound();
+            }
+
+            if(categoria.Produtos != null && categoria.Produtos.Any())
+            {
+                TempData.Add("Warning", "Não é possível excluir a categoria pois existem produtos vinculados.");
+                return RedirectToAction(nameof(Index));
             }
 
             return View(categoria);
@@ -134,6 +151,8 @@ namespace CmStore.Ui.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData.Add("Success", "Categoria excluída com sucesso!");
+
             return RedirectToAction(nameof(Index));
         }
 
