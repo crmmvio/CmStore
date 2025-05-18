@@ -1,5 +1,6 @@
 ﻿using CmStore.Core.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace CmStore.Ui.Configurations;
 

@@ -91,6 +91,9 @@ public class CategoriaController : ControllerBase
             });
         }
 
+        if (_context.UsingSqlLite)
+            categoria.Id = _context.Categorias.Max(e => e.Id) + 1;
+
         _context.Categorias.Add(categoria);
         await _context.SaveChangesAsync();
 

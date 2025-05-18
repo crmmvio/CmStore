@@ -134,7 +134,10 @@ public class ProdutosController : ControllerBase
                 Title = "Um ou mais erros de validação ocorreram!"
             });
         }
-        
+
+        if (_context.UsingSqlLite)
+            produto.Id = _context.Produtos.Max(e => e.Id) + 1;
+
         _context.Produtos.Add(produto);
         await _context.SaveChangesAsync();
         return CreatedAtAction(nameof(GetById), new { id = produto.Id }, produto);

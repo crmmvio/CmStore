@@ -160,7 +160,7 @@ namespace CmStore.Ui.Controllers
                     _context.Update(produto);
                     await _context.SaveChangesAsync();
 
-                    TempData.Add("Error", "Produto atualizado com sucesso!");
+                    TempData.Add("Success", "Produto atualizado com sucesso!");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
